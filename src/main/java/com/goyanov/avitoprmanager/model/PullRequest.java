@@ -3,7 +3,9 @@ package com.goyanov.avitoprmanager.model;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -11,12 +13,11 @@ import java.util.Set;
 @Data
 public class PullRequest
 {
-    enum Status {OPEN, CLOSED}
+    public enum Status {OPEN, CLOSED}
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private Long id;
+    private String id;
 
     @Column(name = "title", nullable = false)
     private String name;
@@ -35,5 +36,5 @@ public class PullRequest
             joinColumns = @JoinColumn(name = "pull_request_id"),
             inverseJoinColumns = @JoinColumn(name = "reviewer_id")
     )
-    private Set<User> reviewers = new HashSet<>();
+    private List<User> reviewers = new ArrayList<>();
 }

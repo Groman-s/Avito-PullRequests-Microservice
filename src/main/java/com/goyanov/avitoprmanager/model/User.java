@@ -31,5 +31,5 @@ public class User
     private List<PullRequest> pullRequests = new ArrayList<>();
 
     @ManyToMany(mappedBy = "reviewers")
-    private Set<PullRequest> reviewedPullRequests = new HashSet<>();
+    private List<PullRequest> reviewedPullRequests = new ArrayList<>();
 }
