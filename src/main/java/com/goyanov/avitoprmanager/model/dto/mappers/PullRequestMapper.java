@@ -5,6 +5,7 @@ import com.goyanov.avitoprmanager.model.Team;
 import com.goyanov.avitoprmanager.model.User;
 import com.goyanov.avitoprmanager.model.dto.PullRequestFullDTO;
 import com.goyanov.avitoprmanager.model.dto.PullRequestWithIdNameAndAuthorIdDTO;
+import com.goyanov.avitoprmanager.model.dto.PullRequestWithIdNameStatusAndAuthorIdDTO;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
@@ -19,6 +20,12 @@ public interface PullRequestMapper
     @Mapping(source = "name", target = "name")
     @Mapping(source = "author.id", target = "authorId")
     PullRequestWithIdNameAndAuthorIdDTO toPullRequestWithIdNameAndAuthorIdDTO(PullRequest pr);
+
+    @Mapping(source = "id", target = "id")
+    @Mapping(source = "name", target = "name")
+    @Mapping(source = "author.id", target = "authorId")
+    @Mapping(source = "status", target = "status")
+    PullRequestWithIdNameStatusAndAuthorIdDTO toPullRequestWithIdNameStatusAndAuthorIdDTO(PullRequest pr);
 
     @Mapping(source = "id", target = "id")
     @Mapping(source = "name", target = "name")

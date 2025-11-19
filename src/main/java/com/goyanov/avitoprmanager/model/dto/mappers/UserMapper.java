@@ -4,10 +4,11 @@ import com.goyanov.avitoprmanager.model.User;
 import com.goyanov.avitoprmanager.model.dto.UserFullDTO;
 import com.goyanov.avitoprmanager.model.dto.UserFullWithTeamNameDTO;
 import com.goyanov.avitoprmanager.model.dto.UserWithIdAndActivityDTO;
+import com.goyanov.avitoprmanager.model.dto.UserWithIdAndReviewsDTO;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", uses = PullRequestMapper.class)
 public interface UserMapper
 {
     @Mapping(source = "id", target = "id")
@@ -20,6 +21,10 @@ public interface UserMapper
     @Mapping(source = "team.name", target = "teamName")
     @Mapping(source = "active", target = "active")
     UserFullWithTeamNameDTO toFullWithTeamNameDto(User user);
+
+    @Mapping(source = "id", target = "id")
+    @Mapping(source = "reviewedPullRequests", target = "pullRequests")
+    UserWithIdAndReviewsDTO toWithIdAndReviewsDto(User user);
 
     @Mapping(source = "id", target = "id")
     @Mapping(source = "active", target = "active")
