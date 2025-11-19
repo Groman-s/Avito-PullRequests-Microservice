@@ -1,5 +1,6 @@
 package com.goyanov.avitoprmanager.controller;
 
+import com.goyanov.avitoprmanager.controller.exceptions.ResourceNotFoundException;
 import com.goyanov.avitoprmanager.controller.responses.UnsuccessfulResponse;
 import com.goyanov.avitoprmanager.model.User;
 import com.goyanov.avitoprmanager.model.dto.UserFullWithTeamNameDTO;
@@ -33,12 +34,7 @@ public class UsersController
     {
         User user = userService.findById(userDTO.getId());
 
-        if (user == null)
-        {
-            return ResponseEntity.status(HttpStatus.valueOf(404)).body(
-                    UnsuccessfulResponse.withError("NOT_FOUND", "resource not found") // TODO создать глобальный обработчик 404 ошибки
-            );
-        }
+        if (user == null) throw new ResourceNotFoundException();
 
         user.setActive(userDTO.isActive());
         userService.saveOrUpdate(user);

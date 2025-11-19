@@ -1,5 +1,6 @@
 package com.goyanov.avitoprmanager.controller;
 
+import com.goyanov.avitoprmanager.controller.exceptions.ResourceNotFoundException;
 import com.goyanov.avitoprmanager.controller.responses.UnsuccessfulResponse;
 import com.goyanov.avitoprmanager.model.Team;
 import com.goyanov.avitoprmanager.model.dto.TeamWithMembersDTO;
@@ -45,12 +46,9 @@ public class TeamsController
     public ResponseEntity<?> getTeamByName(@RequestParam String name)
     {
         Team team = teamService.findByName(name);
-        if (team == null)
-        {
-            return ResponseEntity.status(HttpStatus.valueOf(404)).body(
-                    UnsuccessfulResponse.withError("NOT_FOUND", "resource not found")
-            );
-        }
+
+        if (team == null) throw new ResourceNotFoundException();
+
         return ResponseEntity.status(HttpStatus.valueOf(200)).body(teamMapper.toTeamWithMembersDTO(team));
     }
 }
