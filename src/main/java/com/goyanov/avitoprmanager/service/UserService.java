@@ -14,6 +14,11 @@ public class UserService
         this.userRepository = userRepository;
     }
 
+    public User findById(String id)
+    {
+        return userRepository.findById(id).orElse(null);
+    }
+
     public void saveOrUpdate(User user)
     {
         userRepository.save(user);

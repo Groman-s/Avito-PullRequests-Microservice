@@ -13,5 +13,5 @@ public class TeamWithMembersDTO
     private String name;
 
     @JsonProperty("members")
-    private List<UserDTO> members = new ArrayList<>();
+    private List<UserFullDTO> members = new ArrayList<>();
 }
