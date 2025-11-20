@@ -5,16 +5,16 @@ services:
     image: postgres:15-alpine
     container_name: avito-postgres
     environment:
-      POSTGRES_DB: avito
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: 123
+      POSTGRES_DB: ${POSTGRES_DB:-avito}
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-123}
     volumes:
       - postgresql-data:/var/lib/postgresql/data
       - ./sql:/docker-entrypoint-initdb.d
     networks:
       - avito-ms-network
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-postgres}"]
       interval: 2s
       timeout: 5s
       retries: 5
@@ -26,10 +26,15 @@ services:
       dockerfile: Dockerfile
     container_name: avito-microservice
     ports:
-      - "8080:8080"
+      - "${EXTERNAL_SERVICE_PORT:-8080}:${INTERNAL_SERVICE_PORT:-8080}"
     depends_on:
       postgresql:
         condition: service_healthy
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://${DB_HOST:-postgresql}:5432/${POSTGRES_DB:-avito}
+      SPRING_DATASOURCE_USERNAME: ${POSTGRES_USER:-postgres}
+      SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD:-123}
+      SERVER_PORT: ${INTERNAL_SERVICE_PORT:-8080}
     networks:
       - avito-ms-network
 
