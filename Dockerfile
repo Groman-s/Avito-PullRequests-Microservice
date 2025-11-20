@@ -2,7 +2,7 @@ FROM eclipse-temurin:17-jre-alpine
 
 WORKDIR /avito-ms-app
 
-COPY target/AvitoPrManager-*.jar avito-pr-ms.jar
+COPY AvitoPrManager-0.0.1-SNAPSHOT.jar avito-pr-ms.jar
 COPY src/main/resources/application.properties application.properties
 
 RUN addgroup -S avito && adduser -S avito -G avito
