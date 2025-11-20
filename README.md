@@ -1,12 +1,10 @@
 # **Микросервис для назначения ревьюеров на pull-request-ы**
-___
 
 ## **Задание**
 Проект сделан по [этому](https://github.com/avito-tech/tech-internship/blob/main/Tech%20Internships/Backend/Backend-trainee-assignment-autumn-2025/Backend-trainee-assignment-autumn-2025.md) заданию.
 Спецификация для разработки backend-а находится [здесь](https://github.com/avito-tech/tech-internship/blob/main/Tech%20Internships/Backend/Backend-trainee-assignment-autumn-2025/openapi.yml).
 ___
 ## **Сборка**
-
 Для ручной сборки исполняемого jar-архива из исходного кода при наличии JDK 17+ в системе нужно выполнить следующие действия:
 
 ### Linux
@@ -50,3 +48,18 @@ ___
 ```bash
 curl "http://localhost:8080/team/pullRequestsCount?team_name=team3"
 ```
+
+### Нагрузочное тестирование ###
+Микросервис был протестирован под нагрузкой с использованием `Apache Jmeter`. Проверялся микросервис под нагрузкой
+100 запросов в секунду в течение 2 часов.
+
+#### **___Краткая сводка___**:
+* Среднее время ответа: 9 мс
+* SLI успешности: 100%
+* 99% запросов выполнились быстрее 41 мс
+
+#### **___Отчёт о нагрузочном тестировании (Aggregate Report)___**:
+
+![Отчёт о нагрузочном тестировании](jmeter/agregate_report.png)
+
+План нагрузочного тестирования для Jmeter можно найти в папке `jmeter` - файл `plan.jmx`.
