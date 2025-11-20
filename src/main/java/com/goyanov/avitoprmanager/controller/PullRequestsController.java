@@ -1,5 +1,6 @@
 package com.goyanov.avitoprmanager.controller;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.goyanov.avitoprmanager.controller.exceptions.ResourceNotFoundException;
 import com.goyanov.avitoprmanager.controller.responses.UnsuccessfulResponse;
 import com.goyanov.avitoprmanager.model.PullRequest;
@@ -93,4 +94,45 @@ public class PullRequestsController
                 new MergedPullRequestResponse(pullRequestMapper.toFullPullWithMergeTimeDTO(pr))
         );
     }
+
+    public record PrReassignRequest(
+            @JsonProperty("pull_request_id") String prId,
+            @JsonProperty("old_reviewer_id") String oldReviewerId
+    ) {}
+
+    public record PrReassignedResponse(
+            @JsonProperty("pr") PullRequestFullDTO pr,
+            @JsonProperty("replaced_by") String newReviewerId
+    ) {}
+
+    @Transactional
+    @PostMapping("/reassign")
+    public ResponseEntity<?> reassignPr(@RequestBody PrReassignRequest prReassignRequest)
+    {
+        PullRequest pr = pullRequestService.findById(prReassignRequest.prId);
+
+        if (pr == null) throw new ResourceNotFoundException();
+
+        if (pr.getStatus() == PullRequest.Status.MERGED)
+        {
+            return ResponseEntity.status(HttpStatus.valueOf(409)).body(
+                    UnsuccessfulResponse.withError("PR_MERGED", "cannot reassign on merged PR")
+            );
+        }
+
+        User user = userService.findById(prReassignRequest.oldReviewerId);
+        if (user == null || !pr.getReviewers().contains(user))
+        {
+            throw new ResourceNotFoundException();
+        }
+
+        User anotherReviewer = pullRequestService.findAnotherReviewer(pr);
+        pr.getReviewers().remove(user);
+        pr.getReviewers().add(anotherReviewer);
+
+        return ResponseEntity.status(HttpStatus.valueOf(200)).body(
+                new PrReassignedResponse(pullRequestMapper.toFullPullDTO(pr), anotherReviewer.getId())
+        );
+    }
+
 }

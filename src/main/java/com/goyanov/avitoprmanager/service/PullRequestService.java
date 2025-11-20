@@ -1,5 +1,6 @@
 package com.goyanov.avitoprmanager.service;
 
+import com.goyanov.avitoprmanager.controller.exceptions.ResourceNotFoundException;
 import com.goyanov.avitoprmanager.model.PullRequest;
 import com.goyanov.avitoprmanager.model.User;
 import com.goyanov.avitoprmanager.repository.PullRequestRepository;
@@ -39,5 +40,18 @@ public class PullRequestService
                 .sorted(Comparator.comparingInt(m -> m.getReviewedPullRequests().size()))
                 .limit(2)
                 .collect(Collectors.toList());
+    }
+
+    public User findAnotherReviewer(PullRequest pr)
+    {
+        List<User> reviewers = findReviewers(pr.getAuthor());
+        reviewers.removeAll(pr.getReviewers());
+
+        if (reviewers.isEmpty())
+        {
+            throw new ResourceNotFoundException();
+        }
+
+        return reviewers.get(0);
     }
 }
