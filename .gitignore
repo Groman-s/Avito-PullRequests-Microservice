@@ -13,6 +13,9 @@ target/
 .springBeans
 .sts4-cache
 
+### Microservice ###
+AvitoPrManager*.jar
+
 ### IntelliJ IDEA ###
 .idea
 *.iws
