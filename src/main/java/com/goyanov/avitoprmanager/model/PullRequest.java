@@ -3,6 +3,7 @@ package com.goyanov.avitoprmanager.model;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -13,7 +14,7 @@ import java.util.Set;
 @Data
 public class PullRequest
 {
-    public enum Status {OPEN, CLOSED}
+    public enum Status {OPEN, MERGED}
 
     @Id
     @Column(name = "id")
@@ -29,6 +30,9 @@ public class PullRequest
     @ManyToOne
     @JoinColumn(name = "author_id")
     private User author;
+
+    @Column(name = "merged_at")
+    private Instant mergedAt;
 
     @ManyToMany
     @JoinTable(

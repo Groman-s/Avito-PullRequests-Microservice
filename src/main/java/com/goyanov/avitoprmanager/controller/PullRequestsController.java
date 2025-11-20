@@ -5,6 +5,7 @@ import com.goyanov.avitoprmanager.controller.responses.UnsuccessfulResponse;
 import com.goyanov.avitoprmanager.model.PullRequest;
 import com.goyanov.avitoprmanager.model.User;
 import com.goyanov.avitoprmanager.model.dto.PullRequestFullDTO;
+import com.goyanov.avitoprmanager.model.dto.PullRequestFullWithMergeTimeDTO;
 import com.goyanov.avitoprmanager.model.dto.PullRequestWithIdNameAndAuthorIdDTO;
 import com.goyanov.avitoprmanager.model.dto.mappers.PullRequestMapper;
 import com.goyanov.avitoprmanager.service.PullRequestService;
@@ -17,6 +18,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.time.Instant;
+import java.util.HashMap;
 import java.util.List;
 
 @RestController
@@ -66,6 +69,28 @@ public class PullRequestsController
 
         return ResponseEntity.status(HttpStatus.valueOf(201)).body(
                 new PullRequestCreatedResponse(pullRequestMapper.toFullPullDTO(pr))
+        );
+    }
+
+    public record MergedPullRequestResponse(PullRequestFullWithMergeTimeDTO pr) {}
+
+    @PostMapping("/merge")
+    public ResponseEntity<?> mergeRequest(@RequestBody HashMap<String, String> request)
+    {
+        String prId = request.get("pull_request_id");
+        PullRequest pr = pullRequestService.findById(prId);
+
+        if (pr == null) throw new ResourceNotFoundException();
+
+        if (pr.getStatus() != PullRequest.Status.MERGED)
+        {
+            pr.setStatus(PullRequest.Status.MERGED);
+            pr.setMergedAt(Instant.now());
+            pullRequestService.save(pr);
+        }
+
+        return ResponseEntity.status(HttpStatus.valueOf(200)).body(
+                new MergedPullRequestResponse(pullRequestMapper.toFullPullWithMergeTimeDTO(pr))
         );
     }
 }
