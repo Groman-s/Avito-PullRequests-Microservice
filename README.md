@@ -1,7 +1,10 @@
 # **Микросервис для назначения ревьюеров на pull-request-ы**
-
 ___
 
+## **Задание**
+Проект сделан по [этому](https://github.com/avito-tech/tech-internship/blob/main/Tech%20Internships/Backend/Backend-trainee-assignment-autumn-2025/Backend-trainee-assignment-autumn-2025.md) заданию.
+Спецификация для разработки backend-а находится [здесь](https://github.com/avito-tech/tech-internship/blob/main/Tech%20Internships/Backend/Backend-trainee-assignment-autumn-2025/openapi.yml).
+___
 ## **Сборка**
 
 Для ручной сборки исполняемого jar-архива из исходного кода при наличии JDK 17+ в системе нужно выполнить следующие действия:
@@ -34,3 +37,16 @@ docker-compose up -d
 ```
 
 Если всё пройдёт успешно, сервис будет доступен на порту `8080`.
+___
+
+## **Выполненные дополнительные задания**
+
+### Эндпоинт статистики ###
+Добавлен эндпоинт `/team/pullRequestsCount`, принимающий в качестве параметра имя команды.
+Возвращает статус `200` и количество пулл-реквестов всей команды или статус `400`, если
+команда с указанным именем не существует.
+
+Пример запроса:
+```bash
+curl "http://localhost:8080/team/pullRequestsCount?team_name=team3"
+```
