@@ -1,5 +1,6 @@
 package com.goyanov.avitoprmanager.controller;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.goyanov.avitoprmanager.controller.exceptions.ResourceNotFoundException;
 import com.goyanov.avitoprmanager.controller.responses.UnsuccessfulResponse;
 import com.goyanov.avitoprmanager.model.Team;
@@ -50,5 +51,21 @@ public class TeamsController
         if (team == null) throw new ResourceNotFoundException();
 
         return ResponseEntity.status(HttpStatus.valueOf(200)).body(teamMapper.toTeamWithMembersDTO(team));
+    }
+
+    public record PullRequestCountResponse(@JsonProperty("pr_count") int count) {}
+
+    @GetMapping("/pullRequestsCount")
+    public ResponseEntity<?> getPullRequestsCount(@RequestParam(name = "team_name") String teamName)
+    {
+        Team team = teamService.findByName(teamName);
+
+        if (team == null) throw new ResourceNotFoundException();
+
+        int count = team.getMembers().stream().mapToInt(m -> m.getPullRequests().size()).sum();
+
+        return ResponseEntity.status(HttpStatus.valueOf(200)).body(
+                new PullRequestCountResponse(count)
+        );
     }
 }
