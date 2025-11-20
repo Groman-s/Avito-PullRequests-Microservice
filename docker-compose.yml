@@ -10,6 +10,7 @@ services:
       POSTGRES_PASSWORD: 123
     volumes:
       - postgresql-data:/var/lib/postgresql/data
+      - ./sql:/docker-entrypoint-initdb.d
     networks:
       - avito-ms-network
     healthcheck:
